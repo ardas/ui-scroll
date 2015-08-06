@@ -1,7 +1,7 @@
 /*!
  * angular-ui-scroll
  * https://github.com/angular-ui/ui-scroll.git
- * Version: 1.3.1 -- 2015-08-05T13:39:04.079Z
+ * Version: 1.3.1 -- 2015-08-06T14:43:32.930Z
  * License: MIT
  */
  
@@ -433,6 +433,7 @@ angular.module('ui.scroll', []).directive('uiScrollViewport', function() {
             });
           };
           fetch = function(rid) {
+            var customBufferSize, q, rowTop;
             if (pending[0]) {
               if (buffer.length && !shouldLoadBottom()) {
                 return finalize(rid);
@@ -461,7 +462,16 @@ angular.module('ui.scroll', []).directive('uiScrollViewport', function() {
               if (buffer.length && !shouldLoadTop()) {
                 return finalize(rid);
               } else {
-                return datasource.get(first - bufferSize, bufferSize, function(result) {
+                rowTop = buffer[0].element.offset().top;
+                q = 0;
+                while (q < buffer.length) {
+                  if (rowTop !== buffer[q].element.offset().top) {
+                    break;
+                  }
+                  q++;
+                }
+                customBufferSize = bufferSize % q !== 0 ? bufferSize + q - (bufferSize % q) : bufferSize;
+                return datasource.get(first - customBufferSize, customBufferSize, function(result) {
                   var i, j, ref;
                   if ((rid && rid !== ridActual) || $scope.$$destroyed) {
                     return;

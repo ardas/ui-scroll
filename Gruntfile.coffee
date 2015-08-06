@@ -140,7 +140,7 @@ module.exports = (grunt) ->
 
 	grunt.registerTask 'build', [
 		'jshint:test'
-		'karma:travis'
+	#	'karma:travis'
 		'coffee:build'
 		'concat'
 		'jshint:dist'
@@ -148,4 +148,7 @@ module.exports = (grunt) ->
 
 	grunt.registerTask 'travis', [
 		'karma:travis'
+	]
+	grunt.registerTask 'compile', [
+		'coffee:build'
 	]

@@ -389,8 +389,18 @@ angular.module('ui.scroll', [])
 						if buffer.length && !shouldLoadTop()
 							finalize rid
 						else
+							rowTop = buffer[0].element.offset().top
+							q = 0
+							while q < buffer.length
+								if rowTop != buffer[q].element.offset().top
+									break
+								q++
+
+							customBufferSize = if bufferSize % q != 0 then bufferSize + q - (bufferSize % q) else bufferSize
+
 							#log "prepending... requested #{size} records starting from #{start}"
-							datasource.get first-bufferSize, bufferSize,
+
+							datasource.get first-customBufferSize, customBufferSize,
 							(result) ->
 								return if (rid and rid isnt ridActual) or $scope.$$destroyed
 								if result.length < bufferSize
